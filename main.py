@@ -63,10 +63,14 @@ def get_stat(region, player):
             stat['RANKED_FLEX_SR'] = f"{d['tier'][0]}{d['tier'][1:].lower()} {d['rank']}"
             stat['RANKED_FLEX_SR_WIN'] = f"{d['wins']}"
             stat['RANKED_FLEX_SR_LOSSE'] = f"{d['losses']}"
+            rate = (int(d['wins']) / (int(d['wins']) + int(d['losses']))) * 100
+            stat['RANKED_FLEX_SR_RATE'] = f"{format(rate, '.2f')} %"
         if queueType == 'RANKED_SOLO_5x5':
             stat['RANKED_SOLO_5x5'] = f"{d['tier'][0]}{d['tier'][1:].lower()} {d['rank']}"
             stat['RANKED_SOLO_5x5_WIN'] = f"{d['wins']}"
             stat['RANKED_SOLO_5x5_LOSSE'] = f"{d['losses']}"
+            rate = (int(d['wins']) / (int(d['wins']) + int(d['losses']))) * 100
+            stat['RANKED_SOLO_5x5_RATE'] = f"{format(rate, '.2f')} %"
 
     return stat
 
@@ -78,6 +82,9 @@ Actually bot can handle:
 !link
 !player <player_name> (give stat for solo_duo)
 """
+
+
+foot_msg = "Developed with ♥ by mattyeux."
 
 
 class MyClient(discord.Client):
@@ -128,7 +135,7 @@ class MyClient(discord.Client):
 
             # Add footer
             embed.set_footer(
-                text="Information provided by mattyeux.Inc."
+                text=foot_msg
             )
 
             await message.channel.send(embed=embed)
@@ -148,7 +155,7 @@ class MyClient(discord.Client):
 
             # Add footer
             embed.set_footer(
-                text="Information provided by mattyeux.Inc."
+                text=foot_msg
             )
 
             await message.channel.send(embed=embed)
@@ -171,9 +178,8 @@ class MyClient(discord.Client):
                     color=0xFF5733
                 )
 
-                # Add footer
                 embed.set_footer(
-                    text="Information provided by mattyeux.Inc."
+                    text=foot_msg
                 )
 
                 await message.channel.send(embed=embed)
@@ -189,86 +195,115 @@ class MyClient(discord.Client):
             icon = discord.File(
                 f"riot_data\\11.24.1\\img\\profileicon\\{player_stat['icon']}", filename=player_stat['icon'])
 
-            # Create embed message
+            """
+            General creation
+            """
+
             embed = discord.Embed(
                 title=f"OPGG link for{player_stat['username']}",
                 url=opgg_url,
                 color=0xFF5733
             )
 
-            # Author of message
             embed.set_author(
                 name=message.author.display_name,
                 icon_url=message.author.avatar_url
             )
 
-            # Add player icon
             embed.set_thumbnail(
                 url=f"attachment://{player_stat['icon']}"
             )
 
-            # Add player stat
             embed.add_field(
                 name="Level :level_slider:",
                 value=player_stat['level'],
                 inline=False
             )
 
+            embed.set_footer(
+                text=foot_msg
+            )
+
+            await message.channel.send(file=icon, embed=embed)
+
             """
-                RANKED_FLEX_SR
-                """
+            RANKED_FLEX_SR
+            """
+
             if 'RANKED_FLEX_SR' in player_stat:
+                embed = discord.Embed(
+                    title=f"Ranked flex",
+                    color=0xFF5733
+                )
+
                 embed.add_field(
-                    name="Ranked flex :military_medal:",
+                    name="Rank :trophy:",
                     value=player_stat['RANKED_FLEX_SR'],
+                    inline=False
+                )
+
+                embed.add_field(
+                    name="Wins :white_check_mark:",
+                    value=player_stat['RANKED_FLEX_SR_WIN'],
                     inline=True
                 )
 
-                if player_stat['RANKED_FLEX_SR'] != 'Unranked':
-                    embed.add_field(
-                        name="Wins :white_check_mark:",
-                        value=player_stat['RANKED_FLEX_SR_WIN'],
-                        inline=True
-                    )
+                embed.add_field(
+                    name="Losses :x:",
+                    value=player_stat['RANKED_FLEX_SR_LOSSE'],
+                    inline=True
+                )
 
-                    embed.add_field(
-                        name="Losses :x:",
-                        value=player_stat['RANKED_FLEX_SR_LOSSE'],
-                        inline=True
-                    )
+                embed.add_field(
+                    name="Rate :computer:",
+                    value=player_stat['RANKED_FLEX_SR_RATE'],
+                    inline=True
+                )
+
+                embed.set_footer(
+                    text=foot_msg
+                )
+
+                await message.channel.send(embed=embed)
 
             """ 
                 RANKED_SOLO_5x5
                 """
             if 'RANKED_SOLO_5x5' in player_stat:
+                embed = discord.Embed(
+                    title=f"Ranked solo/duo",
+                    color=0xFF5733
+                )
+
                 embed.add_field(
-                    name="Rank solo/duo :trophy:",
+                    name="Rank :military_medal:",
                     value=player_stat['RANKED_SOLO_5x5'],
+                    inline=False
+                )
+
+                embed.add_field(
+                    name="Wins :white_check_mark:",
+                    value=player_stat['RANKED_SOLO_5x5_WIN'],
                     inline=True
                 )
 
-                if player_stat['RANKED_SOLO_5x5'] != 'Unranked':
-                    embed.add_field(
-                        name="Wins :white_check_mark:",
-                        value=player_stat['RANKED_SOLO_5x5_WIN'],
-                        inline=True
-                    )
+                embed.add_field(
+                    name="Losses :x:",
+                    value=player_stat['RANKED_SOLO_5x5_LOSSE'],
+                    inline=True
+                )
 
-                    embed.add_field(
-                        name="Losses :x:",
-                        value=player_stat['RANKED_SOLO_5x5_LOSSE'],
-                        inline=True
-                    )
+                embed.add_field(
+                    name="Rate :computer:",
+                    value=player_stat['RANKED_SOLO_5x5_RATE'],
+                    inline=True
+                )
 
-            # Add footer
-            embed.set_footer(
-                text="Information provided by mattyeux.Inc."
-            )
+                embed.set_footer(
+                    text=foot_msg
+                )
 
-            await message.channel.send(
-                file=icon,
-                embed=embed
-            )
+                await message.channel.send(embed=embed)
             print(
                 f"\033[32mMessage send in {message.channel.id} at {message.guild.id}\033[0m")
 
