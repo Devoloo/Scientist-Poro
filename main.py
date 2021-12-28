@@ -185,7 +185,7 @@ class MyClient(discord.Client):
 
             opgg_url = f"https://euw.op.gg/summoner/userName={player_url}"
             icon = discord.File(
-                f"python\\discord\\riot_data\\11.24.1\\img\\profileicon\\{player_stat['icon']}", filename=player_stat['icon'])
+                f"riot_data\\11.24.1\\img\\profileicon\\{player_stat['icon']}", filename=player_stat['icon'])
 
             # Create embed message
             embed = discord.Embed(
