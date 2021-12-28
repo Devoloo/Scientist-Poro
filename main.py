@@ -1,10 +1,12 @@
 import discord
 from riotwatcher import LolWatcher, ApiError
 import yaml
-import os
 
-discord_token = os.getenv("DISCORD_TOKEN")
-riot_token = os.getenv("RIOT_TOKEN")
+with open('config.yaml', 'r') as stream:
+    token_list = yaml.safe_load(stream)
+
+discord_token = token_list['discord']
+riot_token = token_list['riot']
 
 # Optionnal function
 

@@ -9,6 +9,9 @@ __pycache__/
 # Yaml config file
 config.yaml
 
+# env file
+discord-bot.code-workspace
+
 # Distribution / packaging
 .Python
 build/
