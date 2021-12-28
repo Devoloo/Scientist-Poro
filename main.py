@@ -1,9 +1,10 @@
 import discord
 from riotwatcher import LolWatcher, ApiError
 import yaml
+import os
 
-with open('python\\discord\\config.yaml', 'r') as stream:
-    token_data = yaml.safe_load(stream)
+discord_token = os.getenv("DISCORD_TOKEN")
+riot_token = os.getenv("RIOT_TOKEN")
 
 # Optionnal function
 
@@ -25,7 +26,7 @@ def parse_message(message):
 
 
 # Riot api key
-api_key = token_data['riot']
+api_key = riot_token
 watcher = LolWatcher(api_key)
 
 # Return stat and icon of player
@@ -275,4 +276,4 @@ class MyClient(discord.Client):
 
 # Create client and run it
 client = MyClient()
-client.run(token_data['discord'])
+client.run(discord_token)
