@@ -129,11 +129,18 @@ def champion_stat(champion):
         return None
 
     current_champion = champ_dict[champion[:len(champion) - 1]]
+    current_champion_stat = current_champion['stats']
 
     champ_dict_stat = {
         'name': current_champion['name'],
         'title': current_champion['title'],
         'blurb': current_champion['blurb'],
+        'hp': current_champion_stat['hp'],
+        'movespeed': current_champion_stat['movespeed'],
+        'armor': current_champion_stat['armor'],
+        'spellblock': current_champion_stat['spellblock'],
+        'attackrange': current_champion_stat['attackrange'],
+        'attackdamage': current_champion_stat['attackdamage'],
     }
 
     return champ_dict_stat
@@ -149,8 +156,10 @@ Actually bot can handle:
 !champion/!c <champion_name>
 """
 
+latest = watcher.data_dragon.versions_for_region('euw1')['n']['champion']
 
-foot_msg = "Developed with ♥ by mattyeux."
+
+foot_msg = f"Developed with ♥ by mattyeux (patch {latest})."
 
 
 class MyClient(discord.Client):
@@ -399,7 +408,7 @@ class MyClient(discord.Client):
         # endregion
 
         # region Most played champion
-        if msg_content[0] == "!most_played" or msg_content[0] == "!mp":
+        if msg_content[0] == "!player_best" or msg_content[0] == "!pb":
             # region Error
             if len(msg_content) == 1:
                 embed = discord.Embed(
@@ -575,6 +584,42 @@ class MyClient(discord.Client):
                 name="Short history :book:",
                 value=champion['blurb'],
                 inline=False
+            )
+
+            embed.add_field(
+                name=":two_hearts: Health",
+                value=champion['hp'],
+                inline=True
+            )
+
+            embed.add_field(
+                name=":roller_skate: Speed",
+                value=champion['movespeed'],
+                inline=True
+            )
+
+            embed.add_field(
+                name=":martial_arts_uniform: Armor",
+                value=champion['armor'],
+                inline=True
+            )
+
+            embed.add_field(
+                name=":closed_book: Magic resit",
+                value=champion['spellblock'],
+                inline=True
+            )
+
+            embed.add_field(
+                name=":bow_and_arrow: Attack range",
+                value=champion['attackrange'],
+                inline=True
+            )
+
+            embed.add_field(
+                name=":muscle_tone2: Attack damage",
+                value=champion['attackdamage'],
+                inline=True
             )
 
             # Add footer
