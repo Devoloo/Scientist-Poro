@@ -212,7 +212,7 @@ class MyClient(discord.Client):
 
             embed.add_field(
                 name="Player best champion",
-                value="`!most_played <player_name>` or `!mp <player_name>` display player most played champion",
+                value="`!player_best <player_name>` or `!pb <player_name>` display player most played champion",
                 inline=False
             )
 
