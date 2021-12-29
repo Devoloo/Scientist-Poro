@@ -42,6 +42,8 @@ def get_stat(region, player):
     Player current rank
     Player wins losses
     """
+    player = player.lower()
+
     # Check error while searching player in euw1
     try:
         current_player = watcher.summoner.by_name(region, player)
@@ -75,6 +77,66 @@ def get_stat(region, player):
     return stat
 
 
+def get_most_played_champion(region, player):
+    player = player.lower()
+
+    # Check error while searching player in euw1
+    try:
+        current_player = watcher.summoner.by_name(region, player)
+    except ApiError as err:
+        print(f"\033[31mError {err}\033[0m")
+        return None
+
+    champion_mastery = watcher.champion_mastery.by_summoner(
+        region, current_player['id'])
+    most_played = champion_mastery[0]
+
+    latest = watcher.data_dragon.versions_for_region(region)['n']['champion']
+    static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
+
+    champ_dict = {}
+    for key in static_champ_list['data']:
+        current_champ = static_champ_list['data'][key]
+        champ_dict[f"{static_champ_list['data'][key]['key']}"] = current_champ
+
+    champ_stat = champ_dict[f"{most_played['championId']}"]
+
+    most_played_dict = {
+        'name': champ_stat['name'],
+        'title': champ_stat['title'],
+        'blurb': champ_stat['blurb'],
+        'championLevel': most_played['championLevel'],
+        'championPoints': most_played['championPoints']
+    }
+
+    return most_played_dict
+
+
+def champion_stat(champion):
+    latest = watcher.data_dragon.versions_for_region('euw1')['n']['champion']
+    static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
+
+    champ_dict = {}
+    for key in static_champ_list['data']:
+        current_champ_stat = static_champ_list['data'][key]
+        champ_dict[f"{key.lower()}"] = current_champ_stat
+
+    champion = champion.lower()
+
+    if not (champion[:len(champion) - 1] in champ_dict):
+        print(f"\033[31mError {champion[:len(champion) - 1]} not in dict\033[0m")
+        return None
+
+    current_champion = champ_dict[champion[:len(champion) - 1]]
+
+    champ_dict_stat = {
+        'name': current_champion['name'],
+        'title': current_champion['title'],
+        'blurb': current_champion['blurb'],
+    }
+
+    return champ_dict_stat
+
 """
 Main function for the Discord bot
 Actually bot can handle:
@@ -94,6 +156,7 @@ class MyClient(discord.Client):
 
     # check when a message is send
     async def on_message(self, message):
+        # region init_message
         # if message don't start with token just ignore
         if not message.content.startswith('!'):
             return
@@ -107,8 +170,9 @@ class MyClient(discord.Client):
             # send information in console
             print(
                 f"\033[34mRecieve message from {message.author} in channel {message.channel.id} from server {message.guild.id}, content: {msg_content}\033[0m")
+        # endregion
 
-        # Help function
+        # region Help
         if msg_content[0] == "!help" or msg_content[0] == "!h":
             embed = discord.Embed(
                 title="Help",
@@ -139,8 +203,11 @@ class MyClient(discord.Client):
             )
 
             await message.channel.send(embed=embed)
+            print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+        # endregion
 
-        # Link function
+        # region Link
         if msg_content[0] == "!link" or msg_content[0] == "!l":
             embed = discord.Embed(
                 title="Link",
@@ -159,22 +226,17 @@ class MyClient(discord.Client):
             )
 
             await message.channel.send(embed=embed)
+            print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+        # endregion
 
-        # Give stat of player for ranked solo duo function
+        # region Player
         if msg_content[0] == '!player' or msg_content[0] == '!p':
-            # Region is euw1
-            args = ""
-            for arg in msg_content[1:]:
-                args += f" {arg}"
-            player_stat = get_stat("euw1", args)
-
-            """
-            Player not found
-            """
-            if player_stat == None:
+            # region Error
+            if len(msg_content) == 1:
                 embed = discord.Embed(
                     title='Error',
-                    description=f"Player **{args}** not found on euw region...\nMaybe username is not wrong or the player is not in euw.",
+                    description=f"Usage: `!player/!p <player_name>`",
                     color=0xFF5733
                 )
 
@@ -184,23 +246,46 @@ class MyClient(discord.Client):
 
                 await message.channel.send(embed=embed)
                 print(
-                    f"\033[32mMessage send in {message.channel.id} at {message.guild.id}\033[0m")
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
                 return
+            # endregion
 
+            # region Get full name
+            args = ""
+            for arg in msg_content[1:]:
+                args += f"{arg} "
+            # endregion
+
+            player_stat = get_stat("euw1", args)
+
+            # region Player not found
+            if player_stat == None:
+                embed = discord.Embed(
+                    title='Error',
+                    description=f"Player **{args}**not found on euw region...\nMaybe username is not wrong or the player is not in euw.",
+                    color=0xFF5733
+                )
+
+                embed.set_footer(
+                    text=foot_msg
+                )
+
+                await message.channel.send(embed=embed)
+                print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+                return
+            # endregion
+
+            # region General creation
+            # Create player opgg url
             player_url = ""
             for w in msg_content[1:]:
                 player_url += f"{w}%20"
 
             opgg_url = f"https://euw.op.gg/summoner/userName={player_url}"
-            icon = discord.File(
-                f"riot_data\\11.24.1\\img\\profileicon\\{player_stat['icon']}", filename=player_stat['icon'])
-
-            """
-            General creation
-            """
 
             embed = discord.Embed(
-                title=f"OPGG link for{player_stat['username']}",
+                title=f"OPGG link for {player_stat['username']}",
                 url=opgg_url,
                 color=0xFF5733
             )
@@ -211,7 +296,7 @@ class MyClient(discord.Client):
             )
 
             embed.set_thumbnail(
-                url=f"attachment://{player_stat['icon']}"
+                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/profileicon/{player_stat['icon']}"
             )
 
             embed.add_field(
@@ -219,21 +304,14 @@ class MyClient(discord.Client):
                 value=player_stat['level'],
                 inline=False
             )
+            # endregion
 
-            embed.set_footer(
-                text=foot_msg
-            )
-
-            await message.channel.send(file=icon, embed=embed)
-
-            """
-            RANKED_FLEX_SR
-            """
-
+            # region RANKED_FLEX_SR
             if 'RANKED_FLEX_SR' in player_stat:
-                embed = discord.Embed(
-                    title=f"Ranked flex",
-                    color=0xFF5733
+                embed.add_field(
+                    name=">>> Ranked Flex",
+                    value="Here stats for ranked flex !",
+                    inline=True
                 )
 
                 embed.add_field(
@@ -259,20 +337,14 @@ class MyClient(discord.Client):
                     value=player_stat['RANKED_FLEX_SR_RATE'],
                     inline=True
                 )
+            # endregion
 
-                embed.set_footer(
-                    text=foot_msg
-                )
-
-                await message.channel.send(embed=embed)
-
-            """ 
-                RANKED_SOLO_5x5
-                """
+            # region RANKED_SOLO_5x5
             if 'RANKED_SOLO_5x5' in player_stat:
-                embed = discord.Embed(
-                    title=f"Ranked solo/duo",
-                    color=0xFF5733
+                embed.add_field(
+                    name=">>> Ranked Solo/Duo",
+                    value="Here stats for ranked solo/duo !",
+                    inline=True
                 )
 
                 embed.add_field(
@@ -298,18 +370,197 @@ class MyClient(discord.Client):
                     value=player_stat['RANKED_SOLO_5x5_RATE'],
                     inline=True
                 )
+            # endregion
+
+            embed.set_footer(
+                text=foot_msg
+            )
+
+            await message.channel.send(embed=embed)
+
+            print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+        # endregion
+
+        #region Most played champion
+        if msg_content[0] == "!most_played" or msg_content[0] == "!mp":
+            # region Error
+            if len(msg_content) == 1:
+                embed = discord.Embed(
+                    title='Error',
+                    description=f"Usage: `!most_played/!mp <player_name>`",
+                    color=0xFF5733
+                )
 
                 embed.set_footer(
                     text=foot_msg
                 )
 
                 await message.channel.send(embed=embed)
+                print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+                return
+            # endregion
+            
+            # region Get full name
+            args = ""
+            for arg in msg_content[1:]:
+                args += f"{arg} "
+            player_stat = get_stat("euw1", args)
+            # endregion
+
+            most_played = get_most_played_champion('euw1', args)
+
+            #region Player not found
+            if most_played == None:
+                embed = discord.Embed(
+                    title='Error',
+                    description=f"Player **{args}**not found on euw region...\nMaybe username is not wrong or the player is not in euw.",
+                    color=0xFF5733
+                )
+
+                embed.set_footer(
+                    text=foot_msg
+                )
+
+                await message.channel.send(embed=embed)
+                print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+                return
+            #endregion
+
+            #region General creation
+            opgg_url = f"https://euw.op.gg/champion/{most_played['name'].lower()}"
+
+            embed = discord.Embed(
+                title=f"{args}most played champion: {most_played['name']}",
+                url=opgg_url,
+                description=f"\"*{most_played['title']}*\"",
+                color=0xFF5733
+            )
+
+            embed.set_author(
+                name=message.author.display_name,
+                icon_url=message.author.avatar_url
+            )
+
+            embed.set_thumbnail(
+                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{most_played['name']}.png"
+            )
+
+            embed.add_field(
+                name="Short history :book:",
+                value=most_played['blurb'],
+                inline=False
+            )
+
+            embed.add_field(
+                name="Champion mastery :unlock:",
+                value=most_played['championLevel'],
+                inline=True
+            )
+
+            embed.add_field(
+                name="Champion point :first_place:",
+                value=most_played['championPoints'],
+                inline=True
+            )
+
+            # Add footer
+            embed.set_footer(
+                text=foot_msg
+            )
+
+            await message.channel.send(embed=embed)
+
             print(
-                f"\033[32mMessage send in {message.channel.id} at {message.guild.id}\033[0m")
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+            #endregion
+        #endregion
 
-        # Champion stat function
-        # TODO
+        #region Champion stat
+        if msg_content[0] == "!champion" or msg_content[0] == "!c":
+            # region Error
+            if len(msg_content) == 1:
+                embed = discord.Embed(
+                    title='Error',
+                    description=f"Usage: `!champion/!c <champion_name>`",
+                    color=0xFF5733
+                )
 
+                embed.set_footer(
+                    text=foot_msg
+                )
+
+                await message.channel.send(embed=embed)
+                print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+                return
+            # endregion
+
+            # region Get full name
+            args = ""
+            for arg in msg_content[1:]:
+                args += f"{arg} "
+            player_stat = get_stat("euw1", args)
+            # endregion
+
+            champion = champion_stat(args)
+
+            #region champion not found
+            if champion == None:
+                embed = discord.Embed(
+                    title='Error',
+                    description=f"Champion **{args}**not found...",
+                    color=0xFF5733
+                )
+
+                embed.set_footer(
+                    text=foot_msg
+                )
+
+                await message.channel.send(embed=embed)
+                print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+                return
+            #endregion
+        
+             #region General creation
+            opgg_url = f"https://euw.op.gg/champion/{champion['name'].lower()}"
+
+            embed = discord.Embed(
+                title=f"{champion['name']}",
+                url=opgg_url,
+                description=f"\"*{champion['title']}*\"",
+                color=0xFF5733
+            )
+
+            embed.set_author(
+                name=message.author.display_name,
+                icon_url=message.author.avatar_url
+            )
+
+            embed.set_thumbnail(
+                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{champion['name']}.png"
+            )
+
+            embed.add_field(
+                name="Short history :book:",
+                value=champion['blurb'],
+                inline=False
+            )
+
+            # Add footer
+            embed.set_footer(
+                text=foot_msg
+            )
+
+            await message.channel.send(embed=embed)
+
+            print(
+                f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+            #endregion
+        #endregion
 
 # Create client and run it
 client = MyClient()
