@@ -446,7 +446,9 @@ class MyClient(discord.Client):
             # endregion
 
             # region General creation
-            opgg_url = f"https://euw.op.gg/champion/{most_played['name'].lower()}"
+            champion_name = most_played['name'].lower()
+            champion_name = champion_name.replace(" ", "%20")
+            opgg_url = f"https://euw.op.gg/champion/{champion_name}"
 
             embed = discord.Embed(
                 title=f"{args}most played champion: {most_played['name']}",
@@ -460,8 +462,11 @@ class MyClient(discord.Client):
                 icon_url=message.author.avatar_url
             )
 
+            champion_name = most_played['name']
+            champion_name = champion_name.replace(" ", "")
+
             embed.set_thumbnail(
-                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{most_played['name']}.png"
+                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{champion_name}.png"
             )
 
             embed.add_field(
@@ -541,8 +546,11 @@ class MyClient(discord.Client):
                 return
             # endregion
 
-             # region General creation
-            opgg_url = f"https://euw.op.gg/champion/{champion['name'].lower()}"
+            # region General creation
+            champion_name = champion['name'].lower()
+            champion_name = champion_name.replace(" ", "%20")
+            print(champion_name)
+            opgg_url = f"https://euw.op.gg/champion/{champion_name}"
 
             embed = discord.Embed(
                 title=f"{champion['name']}",
@@ -556,8 +564,11 @@ class MyClient(discord.Client):
                 icon_url=message.author.avatar_url
             )
 
+            champion_name = champion['name']
+            champion_name = champion_name.replace(" ", "")
+
             embed.set_thumbnail(
-                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{champion['name']}.png"
+                url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{champion_name}.png"
             )
 
             embed.add_field(
