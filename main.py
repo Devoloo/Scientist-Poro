@@ -178,6 +178,7 @@ class MyClient(discord.Client):
         if message.author.id == self.user.id:
             return
         else:
+            await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="!help"))
             # get the current message is a list
             msg_content = parse_message(message.content)
             # send information in console
@@ -558,7 +559,6 @@ class MyClient(discord.Client):
             # region General creation
             champion_name = champion['name'].lower()
             champion_name = champion_name.replace(" ", "%20")
-            print(champion_name)
             opgg_url = f"https://euw.op.gg/champion/{champion_name}"
 
             embed = discord.Embed(
