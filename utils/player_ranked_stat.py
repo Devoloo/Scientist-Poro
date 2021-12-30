@@ -1,5 +1,5 @@
 import discord
-from utils.riot_game_acces import get_player_stat, foot_msg
+from utils.riot_game_acces import get_player_stat, foot_msg, latest
 
 
 async def player_ranked_stat_function(message, msg_content):
@@ -66,7 +66,7 @@ async def player_ranked_stat_function(message, msg_content):
     )
 
     embed.set_thumbnail(
-        url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/profileicon/{player_stat['icon']}"
+        url=f"http://ddragon.leagueoflegends.com/cdn/{latest}/img/profileicon/{player_stat['icon']}"
     )
 
     embed.add_field(
@@ -81,13 +81,13 @@ async def player_ranked_stat_function(message, msg_content):
     # endregion
 
     # region RANKED_FLEX_SR
-    if 'RANKED_FLEX_SR' in player_stat:
-        embed.add_field(
-            name=">>> Ranked Flex",
-            value="Here stats for ranked flex !",
-            inline=True
-        )
+    embed.add_field(
+        name=">>> Ranked Flex",
+        value="Here stats for ranked flex !",
+        inline=True
+    )
 
+    if 'RANKED_FLEX_SR' in player_stat:
         embed.add_field(
             name="Rank :trophy:",
             value=player_stat['RANKED_FLEX_SR'],
@@ -111,16 +111,22 @@ async def player_ranked_stat_function(message, msg_content):
             value=player_stat['RANKED_FLEX_SR_RATE'],
             inline=True
         )
+    else:
+        embed.add_field(
+            name="Rank :trophy:",
+            value="Unranked",
+            inline=False
+        )
     # endregion
 
     # region RANKED_SOLO_5x5
-    if 'RANKED_SOLO_5x5' in player_stat:
-        embed.add_field(
-            name=">>> Ranked Solo/Duo",
-            value="Here stats for ranked solo/duo !",
-            inline=True
-        )
+    embed.add_field(
+        name=">>> Ranked Solo/Duo",
+        value="Here stats for ranked solo/duo !",
+        inline=True
+    )
 
+    if 'RANKED_SOLO_5x5' in player_stat:
         embed.add_field(
             name="Rank :military_medal:",
             value=player_stat['RANKED_SOLO_5x5'],
@@ -143,6 +149,12 @@ async def player_ranked_stat_function(message, msg_content):
             name="Rate :computer:",
             value=player_stat['RANKED_SOLO_5x5_RATE'],
             inline=True
+        )
+    else:
+        embed.add_field(
+            name="Rank :military_medal:",
+            value="Unranked",
+            inline=False
         )
     # endregion
 

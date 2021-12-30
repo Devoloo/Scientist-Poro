@@ -1,5 +1,5 @@
 import discord
-from utils.riot_game_acces import get_champion_stat, foot_msg
+from utils.riot_game_acces import get_champion_stat, foot_msg, latest
 
 
 async def champion_stat_function(message, msg_content):
@@ -68,7 +68,7 @@ async def champion_stat_function(message, msg_content):
     champion_name = champion_name.replace(" ", "")
 
     embed.set_thumbnail(
-        url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{champion_name}.png"
+        url=f"https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/{champion_name}_0.jpg"
     )
 
     embed.add_field(
@@ -78,37 +78,37 @@ async def champion_stat_function(message, msg_content):
     )
 
     embed.add_field(
-        name=":two_hearts: Health",
+        name="<:health:926031096540430367> Health",
         value=champion['hp'],
         inline=True
     )
 
     embed.add_field(
-        name=":roller_skate: Speed",
-        value=champion['movespeed'],
+        name="<:attackspeed:926031096502710272> Attack speed",
+        value=champion['attackspeed'],
         inline=True
     )
 
     embed.add_field(
-        name=":martial_arts_uniform: Armor",
+        name="<:armor:926031096121024564> Armor",
         value=champion['armor'],
         inline=True
     )
 
     embed.add_field(
-        name=":closed_book: Magic resit",
+        name="<:spellblock:926031096574013460> Magic resit",
         value=champion['spellblock'],
         inline=True
     )
 
     embed.add_field(
-        name=":bow_and_arrow: Attack range",
+        name="<:range:926031096540438528> Attack range",
         value=champion['attackrange'],
         inline=True
     )
 
     embed.add_field(
-        name=":muscle_tone2: Attack damage",
+        name="<:damage:926031096246849577> Attack damage",
         value=champion['attackdamage'],
         inline=True
     )

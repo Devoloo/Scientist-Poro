@@ -117,7 +117,7 @@ def get_champion_stat(champion):
         'title': current_champion['title'],
         'blurb': current_champion['blurb'],
         'hp': current_champion_stat['hp'],
-        'movespeed': current_champion_stat['movespeed'],
+        'attackspeed': current_champion_stat['attackspeed'],
         'armor': current_champion_stat['armor'],
         'spellblock': current_champion_stat['spellblock'],
         'attackrange': current_champion_stat['attackrange'],

@@ -1,5 +1,5 @@
 import discord
-from utils.riot_game_acces import get_most_played_champion, foot_msg
+from utils.riot_game_acces import get_most_played_champion, foot_msg, latest
 
 
 async def player_champ_stat_function(message, msg_content):
@@ -68,7 +68,7 @@ async def player_champ_stat_function(message, msg_content):
     champion_name = champion_name.replace(" ", "")
 
     embed.set_thumbnail(
-        url=f"https://raw.githubusercontent.com/Devoloo/Scientist-Poro/main/riot_data/11.24.1/img/champion/{champion_name}.png"
+        url=f"https://ddragon.leagueoflegends.com/cdn/img/champion/tiles/{champion_name}_0.jpg"
     )
 
     embed.add_field(
