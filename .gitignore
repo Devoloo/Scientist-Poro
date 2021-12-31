@@ -12,6 +12,8 @@ config.yaml
 # env file
 discord-bot.code-workspace
 
+.exec.bat
+
 # Distribution / packaging
 .Python
 build/
