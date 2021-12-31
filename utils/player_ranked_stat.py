@@ -1,23 +1,12 @@
 import discord
 from utils.riot_game_acces import get_player_stat, foot_msg, latest
+from utils.error import error_riot, error_wrong_args
 
 
 async def player_ranked_stat_function(message, msg_content):
     # region Error
     if len(msg_content) == 1:
-        embed = discord.Embed(
-            title='Error',
-            description=f"Usage: `!player/!p <player_name>`",
-            color=0xFF5733
-        )
-
-        embed.set_footer(
-            text=foot_msg
-        )
-
-        await message.channel.send(embed=embed)
-        print(
-            f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+        await error_wrong_args(message)
         return
     # endregion
 
@@ -25,32 +14,20 @@ async def player_ranked_stat_function(message, msg_content):
     args = ""
     for arg in msg_content[1:]:
         args += f"{arg} "
+    args = args[:len(args) - 1]
     # endregion
 
     player_stat = get_player_stat("euw1", args)
 
     # region Player not found
-    if player_stat == None:
-        embed = discord.Embed(
-            title='Error',
-            description=f"Player **{args}**not found on euw region...\nMaybe username is not wrong or the player is not in euw.",
-            color=0xFF5733
-        )
-
-        embed.set_footer(
-            text=foot_msg
-        )
-
-        await message.channel.send(embed=embed)
-        print(
-            f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+    if type(player_stat) != dict:
+        await error_riot(message, player_stat)
         return
     # endregion
 
     # region General creation
-    player_url = ""
-    for w in msg_content[1:]:
-        player_url += f"{w}%20"
+    player_url = args.lower()
+    player_url = player_url.replace(" ", "%20")
 
     opgg_url = f"https://euw.op.gg/summoner/userName={player_url}"
 

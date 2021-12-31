@@ -30,7 +30,7 @@ def get_player_stat(region, player):
         current_player = watcher.summoner.by_name(region, player)
     except ApiError as err:
         print(f"\033[31mError {err}\033[0m")
-        return None
+        return err
 
     ranked_stats = watcher.league.by_summoner(region, current_player['id'])
 
@@ -66,7 +66,7 @@ def get_most_played_champion(region, player):
         current_player = watcher.summoner.by_name(region, player)
     except ApiError as err:
         print(f"\033[31mError {err}\033[0m")
-        return None
+        return err
 
     champion_mastery = watcher.champion_mastery.by_summoner(
         region, current_player['id'])
@@ -104,12 +104,12 @@ def get_champion_stat(champion):
 
     champion = champion.lower()
 
-    if not (champion[:len(champion) - 1] in champ_dict):
+    if not (champion in champ_dict):
         print(
-            f"\033[31mError {champion[:len(champion) - 1]} not in dict\033[0m")
-        return None
+            f"\033[31mError {champion} not in dict\033[0m")
+        return 666
 
-    current_champion = champ_dict[champion[:len(champion) - 1]]
+    current_champion = champ_dict[champion]
     current_champion_stat = current_champion['stats']
 
     champ_dict_stat = {

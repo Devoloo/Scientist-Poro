@@ -1,23 +1,11 @@
 import discord
 from utils.riot_game_acces import get_champion_stat, foot_msg, latest
-
+from utils.error import error_riot, error_wrong_args
 
 async def champion_stat_function(message, msg_content):
     # region Error
     if len(msg_content) == 1:
-        embed = discord.Embed(
-            title='Error',
-            description=f"Usage: `!champion/!c <champion_name>`",
-            color=0xFF5733
-        )
-
-        embed.set_footer(
-            text=foot_msg
-        )
-
-        await message.channel.send(embed=embed)
-        print(
-            f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+        await error_wrong_args(message)
         return
     # endregion
 
@@ -25,25 +13,14 @@ async def champion_stat_function(message, msg_content):
     args = ""
     for arg in msg_content[1:]:
         args += f"{arg} "
+    args = args[:len(args) - 1]
     # endregion
 
     champion = get_champion_stat(args)
 
     # region champion not found
-    if champion == None:
-        embed = discord.Embed(
-            title='Error',
-            description=f"Champion **{args}**not found...",
-            color=0xFF5733
-        )
-
-        embed.set_footer(
-            text=foot_msg
-        )
-
-        await message.channel.send(embed=embed)
-        print(
-            f"\033[32mSend {message.channel.id} at {message.guild.id}\033[0m")
+    if type(champion) != dict:
+        await error_riot(message, champion)
         return
     # endregion
 
