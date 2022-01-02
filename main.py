@@ -25,9 +25,9 @@ def parse_message(message):
     return result
 
 
-def recive_msg(message):
-    print(f"\033[34mRecieve message from {message.author} in channel \
-    {message.channel.id} from server {message.guild.id}, content: {msg_content}\033[0m")
+def recive_msg(message, msg_content):
+    print(f"\033[34mRecieve message from {message.author} in channel" +
+          f"{message.channel.id} from server {message.guild.id}, content: {msg_content}\033[0m")
 
 
 class MyClient(discord.Client):
@@ -47,7 +47,7 @@ class MyClient(discord.Client):
             return
         else:
             msg_content = parse_message(message.content)
-            recive_msg(message)
+            recive_msg(message, msg_content)
 
         if msg_content[0] == "!help" or msg_content[0] == "!h":
             await help_function(message)
