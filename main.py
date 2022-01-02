@@ -25,14 +25,19 @@ def parse_message(message):
     return result
 
 
+def recive_msg(message):
+    print(f"\033[34mRecieve message from {message.author} in channel \
+    {message.channel.id} from server {message.guild.id}, content: {msg_content}\033[0m")
+
+
 class MyClient(discord.Client):
     # Ready to use
     async def on_ready(self):
+        await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="!help"))
         print(f"\033[32mLogged in as {self.user.name}\033[0m")
 
     # check when a message is send
     async def on_message(self, message):
-        # region init_message
         # if message don't start with token just ignore
         if not message.content.startswith('!'):
             return
@@ -41,13 +46,8 @@ class MyClient(discord.Client):
         if message.author.id == self.user.id:
             return
         else:
-            await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="!help"))
-            # get the current message is a list
             msg_content = parse_message(message.content)
-            # send information in console
-            print(
-                f"\033[34mRecieve message from {message.author} in channel {message.channel.id} from server {message.guild.id}, content: {msg_content}\033[0m")
-        # endregion
+            recive_msg(message)
 
         if msg_content[0] == "!help" or msg_content[0] == "!h":
             await help_function(message)
