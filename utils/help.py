@@ -38,7 +38,6 @@ async def help_function(message):
         inline=False
     )
 
-    # Add footer
     embed.set_footer(
         text=foot_msg
     )

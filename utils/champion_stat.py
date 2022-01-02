@@ -3,28 +3,21 @@ from utils.riot_game_acces import get_champion_stat, foot_msg, latest
 from utils.error import error_riot, error_wrong_args
 
 async def champion_stat_function(message, msg_content):
-    # region Error
     if len(msg_content) == 1:
         await error_wrong_args(message)
         return
-    # endregion
 
-    # region Get full name
     args = ""
     for arg in msg_content[1:]:
         args += f"{arg} "
     args = args[:len(args) - 1]
-    # endregion
 
     champion = get_champion_stat(args)
 
-    # region champion not found
     if type(champion) != dict:
         await error_riot(message, champion)
         return
-    # endregion
 
-    # region General creation
     champion_name = champion['name'].lower()
     champion_name = champion_name.replace(" ", "%20")
     opgg_url = f"https://euw.op.gg/champion/{champion_name}"
@@ -90,12 +83,9 @@ async def champion_stat_function(message, msg_content):
         inline=True
     )
 
-    # Add footer
     embed.set_footer(
         text=foot_msg
     )
-
-    # endregion
 
     await message.channel.send(embed=embed)
 

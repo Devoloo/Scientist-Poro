@@ -94,6 +94,8 @@ def get_most_played_champion(region, player):
 
 
 def get_champion_stat(champion):
+    champion = champion.lower()
+
     latest = watcher.data_dragon.versions_for_region('euw1')['n']['champion']
     static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
 
@@ -101,8 +103,6 @@ def get_champion_stat(champion):
     for key in static_champ_list['data']:
         current_champ_stat = static_champ_list['data'][key]
         champ_dict[f"{key.lower()}"] = current_champ_stat
-
-    champion = champion.lower()
 
     if not (champion in champ_dict):
         print(

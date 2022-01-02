@@ -4,28 +4,21 @@ from utils.error import error_riot, error_wrong_args
 
 
 async def player_champ_stat_function(message, msg_content):
-    # region Error
     if len(msg_content) == 1:
         await error_wrong_args(message)
         return
-    # endregion
 
-    # region Get full name
     args = ""
     for arg in msg_content[1:]:
         args += f"{arg} "
     args = args[:len(args) - 1]
-    # endregion
 
     most_played = get_most_played_champion('euw1', args)
 
-    # region Player not found
     if type(most_played) != dict:
         await error_riot(message, most_played)
         return
-    # endregion
 
-    # region General creation
     champion_name = most_played['name'].lower()
     champion_name = champion_name.replace(" ", "%20")
     opgg_url = f"https://euw.op.gg/champion/{champion_name}"
@@ -70,7 +63,6 @@ async def player_champ_stat_function(message, msg_content):
     embed.set_footer(
         text=foot_msg
     )
-    # endregion
 
     await message.channel.send(embed=embed)
 

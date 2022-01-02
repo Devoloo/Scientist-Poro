@@ -4,28 +4,21 @@ from utils.error import error_riot, error_wrong_args
 
 
 async def player_ranked_stat_function(message, msg_content):
-    # region Error
     if len(msg_content) == 1:
         await error_wrong_args(message)
         return
-    # endregion
 
-    # region Get full name
     args = ""
     for arg in msg_content[1:]:
         args += f"{arg} "
     args = args[:len(args) - 1]
-    # endregion
 
     player_stat = get_player_stat("euw1", args)
 
-    # region Player not found
     if type(player_stat) != dict:
         await error_riot(message, player_stat)
         return
-    # endregion
 
-    # region General creation
     player_url = args.lower()
     player_url = player_url.replace(" ", "%20")
 
@@ -55,7 +48,6 @@ async def player_ranked_stat_function(message, msg_content):
     embed.set_footer(
         text=foot_msg
     )
-    # endregion
 
     # region RANKED_FLEX_SR
     embed.add_field(
