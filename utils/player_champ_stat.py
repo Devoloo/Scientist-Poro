@@ -24,7 +24,7 @@ async def player_champ_stat_function(message, msg_content):
     opgg_url = f"https://euw.op.gg/champion/{champion_name}"
 
     embed = discord.Embed(
-        title=f"{args}most played champion: {most_played['name']}",
+        title=f"{args} most played champion: {most_played['name']}",
         url=opgg_url,
         description=f"\"*{most_played['title']}*\"",
         color=0xFF5733
@@ -58,6 +58,12 @@ async def player_champ_stat_function(message, msg_content):
         name="Champion point :first_place:",
         value=most_played['championPoints'],
         inline=True
+    )
+
+    embed.add_field(
+        name=f"{args} total champion mastery :trophy:",
+        value=most_played['total'],
+        inline=False
     )
 
     embed.set_footer(

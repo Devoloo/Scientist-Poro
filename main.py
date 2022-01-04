@@ -7,6 +7,7 @@ from utils.help import help_function
 from utils.link import link_function
 from utils.player_champ_stat import player_champ_stat_function
 from utils.player_ranked_stat import player_ranked_stat_function
+from utils.challenger_top import challenger_top_function
 
 
 def parse_message(message):
@@ -63,6 +64,9 @@ class MyClient(discord.Client):
 
         if msg_content[0] == "!champion" or msg_content[0] == "!c":
             await champion_stat_function(message, msg_content)
+
+        if msg_content[0] == "!top":
+            await challenger_top_function(message)
 
 
 with open('config.yaml', 'r') as stream:

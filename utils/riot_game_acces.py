@@ -58,7 +58,7 @@ def get_player_stat(region, player):
     return stat
 
 
-def get_most_played_champion(region, player):
+def get_most_played_champion(region, player, best=0):
     player = player.lower()
 
     # Check error while searching player in euw1
@@ -70,7 +70,7 @@ def get_most_played_champion(region, player):
 
     champion_mastery = watcher.champion_mastery.by_summoner(
         region, current_player['id'])
-    most_played = champion_mastery[0]
+    most_played = champion_mastery[best]
 
     latest = watcher.data_dragon.versions_for_region(region)['n']['champion']
     static_champ_list = watcher.data_dragon.champions(latest, False, 'en_US')
@@ -83,6 +83,7 @@ def get_most_played_champion(region, player):
     champ_stat = champ_dict[f"{most_played['championId']}"]
 
     most_played_dict = {
+        'total': watcher.champion_mastery.scores_by_summoner(region, current_player['id']),
         'name': champ_stat['name'],
         'title': champ_stat['title'],
         'blurb': champ_stat['blurb'],
@@ -125,3 +126,23 @@ def get_champion_stat(champion):
     }
 
     return champ_dict_stat
+
+
+def get_challenger_rank(region):
+    try:
+        challenger_list = watcher.leagueoflegends.entries(
+            region, "RANKED_SOLO_5x5", "CHALLENGER", "I")
+    except ApiError as err:
+        print(f"\033[31mError {err}\033[0m")
+        return err
+
+    challenger_dict = {}
+
+    index = 0
+    for player in challenger_list:
+        if index == 10:
+            break
+        index += 1
+        challenger_dict[challenger_list['summonerName']] = challenger_list['leaguePoints']
+
+    return challenger_list
