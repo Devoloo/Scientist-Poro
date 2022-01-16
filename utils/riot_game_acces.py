@@ -146,3 +146,41 @@ def get_challenger_rank(region):
         challenger_dict[challenger_list['summonerName']] = challenger_list['leaguePoints']
 
     return challenger_list
+
+
+def get_player_history(region, player):
+    player = player.lower()
+
+    # Check error while searching player in euw1
+    try:
+        current_player = watcher.summoner.by_name('euw1', player)
+    except ApiError as err:
+        print(f"\033[31mError {err}\033[0m")
+        return err
+    
+    puuid = current_player['puuid']
+    history = watcher.match.matchlist_by_puuid(region, puuid, count=1, start=0)
+
+    game = watcher.match.by_id(match_id=history[0], region=region)
+
+    participants = game['metadata']['participants']
+    stats = game['info']['participants']
+
+    game_dict = {}
+    game_dict["team1"] = game['info']["teams"][0]['win']
+    game_dict["team2"] = game['info']["teams"][1]['win']
+
+    for i, participant in enumerate(participants):
+        acc = watcher.summoner.by_puuid("euw1", participant)
+        acc_stat = [
+            stats[i]['championName'],
+            f"{stats[i]['kills']}/{stats[i]['deaths']}/{stats[i]['assists']}",
+            stats[i]['totalDamageDealt'],
+            stats[i]['totalDamageTaken'],
+            stats[i]['totalHeal'],
+            stats[i]['totalMinionsKilled'],
+            stats[i]['visionScore']
+        ]
+        game_dict[acc['name']] = acc_stat
+
+    return game_dict, history[0]

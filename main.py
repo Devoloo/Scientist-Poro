@@ -8,6 +8,7 @@ from utils.link import link_function
 from utils.player_champ_stat import player_champ_stat_function
 from utils.player_ranked_stat import player_ranked_stat_function
 from utils.challenger_top import challenger_top_function
+from utils.history import history_function
 
 
 def parse_message(message):
@@ -50,10 +51,10 @@ class MyClient(discord.Client):
             msg_content = parse_message(message.content)
             recive_msg(message, msg_content)
 
-        if msg_content[0] == "!help" or msg_content[0] == "!h":
+        if msg_content[0] == "!help":
             await help_function(message)
 
-        if msg_content[0] == "!link" or msg_content[0] == "!l":
+        if msg_content[0] == "!link":
             await link_function(message)
 
         if msg_content[0] == '!player' or msg_content[0] == '!p':
@@ -65,9 +66,11 @@ class MyClient(discord.Client):
         if msg_content[0] == "!champion" or msg_content[0] == "!c":
             await champion_stat_function(message, msg_content)
 
-        if msg_content[0] == "!top":
-            await challenger_top_function(message)
+        #if msg_content[0] == "!top":
+        #    await challenger_top_function(message)
 
+        if msg_content[0] == "!history" or msg_content[0] == "!h":
+            await history_function(message, msg_content)
 
 with open('config.yaml', 'r') as stream:
     token_list = yaml.safe_load(stream)

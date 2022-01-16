@@ -22,11 +22,11 @@ async def player_ranked_stat_function(message, msg_content):
     player_url = args.lower()
     player_url = player_url.replace(" ", "%20")
 
-    opgg_url = f"https://euw.op.gg/summoner/userName={player_url}"
+    url = f"https://www.leagueofgraphs.com/summoner/euw/{player_url}"
 
     embed = discord.Embed(
-        title=f"OPGG link for {player_stat['username']}",
-        url=opgg_url,
+        title=f"Link for {player_stat['username']} :link:",
+        url=url,
         color=0xFF5733
     )
 

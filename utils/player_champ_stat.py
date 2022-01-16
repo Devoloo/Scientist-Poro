@@ -19,13 +19,13 @@ async def player_champ_stat_function(message, msg_content):
         await error_riot(message, most_played)
         return
 
-    champion_name = most_played['name'].lower()
+    champion_name = args.lower()
     champion_name = champion_name.replace(" ", "%20")
-    opgg_url = f"https://euw.op.gg/champion/{champion_name}"
+    url = f"https://www.leagueofgraphs.com/champions/builds/{champion_name}"
 
     embed = discord.Embed(
-        title=f"{args} most played champion: {most_played['name']}",
-        url=opgg_url,
+        title=f"{args} most played champion: {most_played['name']} :link:",
+        url=url,
         description=f"\"*{most_played['title']}*\"",
         color=0xFF5733
     )

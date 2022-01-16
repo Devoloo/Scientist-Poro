@@ -18,13 +18,13 @@ async def champion_stat_function(message, msg_content):
         await error_riot(message, champion)
         return
 
-    champion_name = champion['name'].lower()
+    champion_name = args.lower()
     champion_name = champion_name.replace(" ", "%20")
-    opgg_url = f"https://euw.op.gg/champion/{champion_name}"
+    url = f"https://www.leagueofgraphs.com/champions/builds/{champion_name}"
 
     embed = discord.Embed(
-        title=f"{champion['name']}",
-        url=opgg_url,
+        title=f"{champion['name']} :link:",
+        url=url,
         description=f"\"*{champion['title']}*\"",
         color=0xFF5733
     )
