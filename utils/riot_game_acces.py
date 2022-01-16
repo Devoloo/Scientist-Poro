@@ -156,7 +156,7 @@ def get_player_history(region, player):
         current_player = watcher.summoner.by_name('euw1', player)
     except ApiError as err:
         print(f"\033[31mError {err}\033[0m")
-        return err
+        return err, 0
     
     puuid = current_player['puuid']
     history = watcher.match.matchlist_by_puuid(region, puuid, count=1, start=0)
@@ -171,7 +171,12 @@ def get_player_history(region, player):
     game_dict["team2"] = game['info']["teams"][1]['win']
 
     for i, participant in enumerate(participants):
-        acc = watcher.summoner.by_puuid("euw1", participant)
+        try:
+            acc = watcher.summoner.by_puuid("euw1", participant)
+        except ApiError as err2:
+            print(f"\033[31mError {err2}\033[0m")
+            return err2, 0
+
         acc_stat = [
             stats[i]['championName'],
             f"{stats[i]['kills']}/{stats[i]['deaths']}/{stats[i]['assists']}",
@@ -179,7 +184,8 @@ def get_player_history(region, player):
             stats[i]['totalDamageTaken'],
             stats[i]['totalHeal'],
             stats[i]['totalMinionsKilled'],
-            stats[i]['visionScore']
+            stats[i]['visionScore'],
+            stats[i]['goldEarned']
         ]
         game_dict[acc['name']] = acc_stat
 
