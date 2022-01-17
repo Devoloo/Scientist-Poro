@@ -68,7 +68,7 @@ async def history_function(message, msg_content):
             inline=False
             )
     
-    if game_history["team1"] == "true":
+    if game_history["team1"]:
         embed.add_field(
             name="Team :blue_square: win !",
             value="** **",
