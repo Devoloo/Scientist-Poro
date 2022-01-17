@@ -21,11 +21,18 @@ async def history_function(message, msg_content):
 
     url = f"https://www.leagueofgraphs.com/match/euw/{game_id[5:]}"
 
-    embed = discord.Embed(
-        title=f"{args}'s last game :link:",
-        url=url,
-        color=0xFF5733
-    )
+    if game_history["team1"]['win']:
+        embed = discord.Embed(
+            title="Team :blue_square: win :link: !",
+            url=url,
+            color=0x00FFFF
+        )
+    else:
+        embed = discord.Embed(
+            title="Team :red_square: win :link: !",
+            url=url,
+            color=0xFF0000
+        )
 
     embed.set_author(
         name=message.author.display_name,
@@ -36,49 +43,64 @@ async def history_function(message, msg_content):
         text=foot_msg
     )
 
-    team = 1
-
     embed.add_field(
         name="Team :blue_square:",
-        value="**------------------------------------------------------------------------**",
+        value='** **',
         inline=False
     )
 
-    for player in game_history:
-        if player == "team1" or player == "team2":
-            continue
-        team += 1
-
-        player_name = player
+    for blue_player in game_history["team1"]['player']:
+        player_name = blue_player
         player_name = player_name.replace(" ", "%20")
 
         embed.add_field(
-            name=f"{player}",
-            value=f"[{player} stats.](https://www.leagueofgraphs.com/summoner/euw/{player_name})\
-            \n:robot: **Champion: `{game_history[player][0]}`**, :skull_crossbones: **K/D/A: `{game_history[player][1]}`**\
-            \n:crossed_swords: **Damage dealt: `{game_history[player][2]}`**, :shield: **Damage taken: `{game_history[player][3]}`**, :heart_on_fire: **Total heal: `{game_history[player][4]}`**\
-            \n:farmer: **Farming: `{game_history[player][5]}`**, :bulb: **Vision score: `{game_history[player][6]}`**, :moneybag: **Gold earned: `{game_history[player][7]}`**",
-            inline=False
+            name=f"{blue_player}",
+            value=f"[{blue_player} stats.](https://www.leagueofgraphs.com/summoner/euw/{player_name})\
+            \n:robot: **Champion: `{game_history['team1']['player'][blue_player][0]}`**\
+            \n:skull_crossbones: **K/D/A: `{game_history['team1']['player'][blue_player][1]}`**\
+            \n:crossed_swords: **Damage dealt: `{game_history['team1']['player'][blue_player][2]}`**\
+            \n:shield: **Damage taken: `{game_history['team1']['player'][blue_player][3]}`**\
+            \n:heart_on_fire: **Total heal: `{game_history['team1']['player'][blue_player][4]}`**\
+            \n:farmer: **Farming: `{game_history['team1']['player'][blue_player][5]}`**\
+            \n:bulb: **Vision score: `{game_history['team1']['player'][blue_player][6]}`**\
+            \n:moneybag: **Gold earned: `{game_history['team1']['player'][blue_player][7]}`**",
+            inline=True
         )
 
-        if team == 6:
-            embed.add_field(
-            name="Team :red_square:",
-            value="**------------------------------------------------------------------------**",
-            inline=False
-            )
-    
-    if game_history["team1"]:
+    embed.add_field(
+        name='\u200B',
+        value='\u200B',
+        inline=True
+    )
+
+    embed.add_field(
+        name="Team :red_square:",
+        value='** **',
+        inline=False
+    )
+
+    for blue_player in game_history["team2"]['player']:
+        player_name = blue_player
+        player_name = player_name.replace(" ", "%20")
+
         embed.add_field(
-            name="Team :blue_square: win !",
-            value="** **",
-            inline=False
+            name=f"{blue_player}",
+            value=f"[{blue_player} stats.](https://www.leagueofgraphs.com/summoner/euw/{player_name})\
+            \n:robot: **Champion: `{game_history['team2']['player'][blue_player][0]}`**\
+            \n:skull_crossbones: **K/D/A: `{game_history['team2']['player'][blue_player][1]}`**\
+            \n:crossed_swords: **Damage dealt: `{game_history['team2']['player'][blue_player][2]}`**\
+            \n:shield: **Damage taken: `{game_history['team2']['player'][blue_player][3]}`**\
+            \n:heart_on_fire: **Total heal: `{game_history['team2']['player'][blue_player][4]}`**\
+            \n:farmer: **Farming: `{game_history['team2']['player'][blue_player][5]}`**\
+            \n:bulb: **Vision score: `{game_history['team2']['player'][blue_player][6]}`**\
+            \n:moneybag: **Gold earned: `{game_history['team2']['player'][blue_player][7]}`**",
+            inline=True
         )
-    else:
-        embed.add_field(
-            name="**------------------------------------------------------------------------**",
-            value="**Team :red_square: win !**",
-            inline=False
-        )
+
+    embed.add_field(
+        name='\u200B',
+        value='\u200B',
+        inline=True
+    )
 
     await message.channel.send(embed=embed)

@@ -27,7 +27,7 @@ async def player_champ_stat_function(message, msg_content):
         title=f"{args} most played champion: {most_played['name']} :link:",
         url=url,
         description=f"\"*{most_played['title']}*\"",
-        color=0xFF5733
+        color=0x7CFC00
     )
 
     embed.set_author(

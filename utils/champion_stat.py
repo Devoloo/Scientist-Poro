@@ -26,7 +26,7 @@ async def champion_stat_function(message, msg_content):
         title=f"{champion['name']} :link:",
         url=url,
         description=f"\"*{champion['title']}*\"",
-        color=0xFF5733
+        color=0x7CFC00
     )
 
     embed.set_author(

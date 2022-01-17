@@ -167,8 +167,14 @@ def get_player_history(region, player):
     stats = game['info']['participants']
 
     game_dict = {}
-    game_dict["team1"] = game['info']["teams"][0]['win']
-    game_dict["team2"] = game['info']["teams"][1]['win']
+    game_dict["team1"] = {}
+    game_dict["team2"] = {}
+    game_dict["team1"]['win'] = game['info']["teams"][0]['win']
+    game_dict["team2"]['win'] = game['info']["teams"][1]['win']
+    game_dict['team1']['player'] = {}
+    game_dict['team2']['player'] = {}
+
+    current = 1
 
     for i, participant in enumerate(participants):
         try:
@@ -187,6 +193,12 @@ def get_player_history(region, player):
             stats[i]['visionScore'],
             stats[i]['goldEarned']
         ]
-        game_dict[acc['name']] = acc_stat
+
+        current += 1
+
+        if current <= 6:
+            game_dict['team1']['player'][acc['name']] = acc_stat
+        else:
+            game_dict['team2']['player'][acc['name']] = acc_stat
 
     return game_dict, history[0]

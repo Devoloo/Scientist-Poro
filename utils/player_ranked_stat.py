@@ -27,7 +27,7 @@ async def player_ranked_stat_function(message, msg_content):
     embed = discord.Embed(
         title=f"Link for {player_stat['username']} :link:",
         url=url,
-        color=0xFF5733
+        color=0x7CFC00
     )
 
     embed.set_author(

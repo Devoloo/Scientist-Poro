@@ -6,7 +6,7 @@ async def error_wrong_args(message):
     embed = discord.Embed(
         title='Error',
         description=f"Usage: `!champion/!c <champion_name>`",
-        color=0xFF5733
+        color=0x7CFC00
     )
 
     embed.set_footer(
@@ -25,7 +25,7 @@ async def error_riot(message, err):
     embed = discord.Embed(
         title='Error',
         description=f"{err}",
-        color=0xFF5733
+        color=0x7CFC00
     )
 
     embed.set_footer(

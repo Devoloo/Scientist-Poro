@@ -5,7 +5,7 @@ from utils.riot_game_acces import foot_msg
 async def link_function(message):
     embed = discord.Embed(
         title="Link",
-        color=0xFF5733
+        color=0x7CFC00
     )
 
     embed.add_field(
