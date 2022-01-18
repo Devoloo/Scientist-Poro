@@ -79,21 +79,21 @@ async def history_function(message, msg_content):
         inline=False
     )
 
-    for blue_player in game_history["team2"]['player']:
-        player_name = blue_player
+    for red_player in game_history["team2"]['player']:
+        player_name = red_player
         player_name = player_name.replace(" ", "%20")
 
         embed.add_field(
-            name=f"{blue_player}",
-            value=f"[{blue_player} stats.](https://www.leagueofgraphs.com/summoner/euw/{player_name})\
-            \n:robot: **Champion: `{game_history['team2']['player'][blue_player][0]}`**\
-            \n:skull_crossbones: **K/D/A: `{game_history['team2']['player'][blue_player][1]}`**\
-            \n:crossed_swords: **Damage dealt: `{game_history['team2']['player'][blue_player][2]}`**\
-            \n:shield: **Damage taken: `{game_history['team2']['player'][blue_player][3]}`**\
-            \n:heart_on_fire: **Total heal: `{game_history['team2']['player'][blue_player][4]}`**\
-            \n:farmer: **Farming: `{game_history['team2']['player'][blue_player][5]}`**\
-            \n:bulb: **Vision score: `{game_history['team2']['player'][blue_player][6]}`**\
-            \n:moneybag: **Gold earned: `{game_history['team2']['player'][blue_player][7]}`**",
+            name=f"{red_player}",
+            value=f"[{red_player} stats.](https://www.leagueofgraphs.com/summoner/euw/{player_name})\
+            \n:robot: **Champion: `{game_history['team2']['player'][red_player][0]}`**\
+            \n:skull_crossbones: **K/D/A: `{game_history['team2']['player'][red_player][1]}`**\
+            \n:crossed_swords: **Damage dealt: `{game_history['team2']['player'][red_player][2]}`**\
+            \n:shield: **Damage taken: `{game_history['team2']['player'][red_player][3]}`**\
+            \n:heart_on_fire: **Total heal: `{game_history['team2']['player'][red_player][4]}`**\
+            \n:farmer: **Farming: `{game_history['team2']['player'][red_player][5]}`**\
+            \n:bulb: **Vision score: `{game_history['team2']['player'][red_player][6]}`**\
+            \n:moneybag: **Gold earned: `{game_history['team2']['player'][red_player][7]}`**",
             inline=True
         )
 
