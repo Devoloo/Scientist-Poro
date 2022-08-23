@@ -6,12 +6,13 @@ Scientist Poro discord bot that link Discord account to League of Legend account
 ### Requirement
 This project use NodeJS so you need to install ``node`` and ``npm``.
 Create a ``config.json`` file like so:
-{
+
+``{
     "clientId": "clientId",
 	"guildId": "guildId",
     "token": "token",
     "riotkey": "riotkey"
-}
+}``
 
 ### Installation
 Git clone this project using:
