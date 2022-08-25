@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, PermissionsBitField  } = require('discord.js');
 
 //#region Create table
 const Sequelize = require('sequelize');
@@ -30,7 +30,7 @@ module.exports = {
         .setName('clear-data')
         .setDescription('(Admin) Clears all data from the database.'),
 	async execute(interaction) {
-        if (!interaction.member.roles.cache.some(role => role.name === '*')) {
+        if (!interaction.member.permissions.has(PermissionsBitField.Flags.Administrator)) {
             return interaction.reply({ content: 'You do not have permission to use this command.', ephemeral: true });
         }
 
