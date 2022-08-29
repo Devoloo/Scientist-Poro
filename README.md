@@ -9,7 +9,6 @@ Create a ``config.json`` file like so:
 
 ``{
     "clientId": "clientId",
-	"guildId": "guildId",
     "token": "token",
     "riotkey": "riotkey"
 }``
